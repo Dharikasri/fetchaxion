@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAllCustomers } from '../services/api'; 
+import axios from 'axios';
 import '../styles/CustomerList.css';
-
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
@@ -9,15 +8,15 @@ const CustomerList = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const data = await getAllCustomers();
-        setCustomers(data); 
+        const response = await axios.get('http://localhost:8000/customer/api2/customers/');
+        setCustomers(response.data);
       } catch (error) {
         console.error('Error fetching customers:', error);
       }
     };
 
-    fetchCustomers(); 
-  }, []); 
+    fetchCustomers();
+  }, []);
 
   return (
     <div>
@@ -28,7 +27,8 @@ const CustomerList = () => {
             <strong>Name:</strong> {customer.name}<br />
             <strong>Address:</strong> {customer.address}<br />
             <strong>Mobile:</strong> {customer.mobile}<br />
-            <hr /> 
+            <strong>Created At:</strong> {new Date(customer.created_at).toLocaleString()}<br />
+            <hr />
           </li>
         ))}
       </ul>
